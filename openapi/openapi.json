@@ -1,0 +1,194 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "flowers-store API",
+    "version": "0.1.0",
+    "description": "Магазин цветов: каталог, корзина, заказ, админ, UploadThing, ЮKassa (вебхук-заглушка)"
+  },
+  "servers": [{ "url": "/", "description": "Текущий origin" }],
+  "tags": [
+    { "name": "Public", "description": "Витрина" },
+    { "name": "Cart", "description": "Корзина (заголовок X-Guest-Token)" },
+    { "name": "Orders", "description": "Оформление" },
+    { "name": "Admin", "description": "Админ (cookie admin_session)" },
+    { "name": "Upload", "description": "UploadThing" },
+    { "name": "Webhooks", "description": "Платёжка" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "adminCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "admin_session"
+      },
+      "guestHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Guest-Token"
+      }
+    },
+    "schemas": {
+      "Error": { "type": "object", "properties": { "error": { "type": "string" } } },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "imageUrls": { "type": "array", "maxItems": 5, "items": { "type": "string" } },
+          "isActive": { "type": "boolean" },
+          "category": { "type": "object" },
+          "priceOriginal": { "type": "string" },
+          "priceFinal": { "type": "string" },
+          "discount": { "type": "object" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/products": {
+      "get": {
+        "tags": ["Public"],
+        "summary": "Список товаров, поиск и фильтр по категории",
+        "parameters": [
+          { "name": "q", "in": "query", "schema": { "type": "string" } },
+          { "name": "categorySlug", "in": "query", "schema": { "type": "string" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "default": 20 } }
+        ],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/categories": {
+      "get": { "tags": ["Public"], "summary": "Категории", "responses": { "200": { "description": "OK" } } }
+    },
+    "/api/cart": {
+      "get": {
+        "tags": ["Cart"],
+        "summary": "Корзина",
+        "security": [{ "guestHeader": [] }],
+        "responses": { "200": { "description": "OK" } }
+      }
+    },
+    "/api/cart/items": {
+      "post": {
+        "tags": ["Cart"],
+        "summary": "Добавить в корзину",
+        "security": [{ "guestHeader": [] }],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "type": "object", "properties": { "productId": { "type": "string" }, "quantity": { "type": "integer" } } } } }
+        },
+        "responses": { "200": { "description": "ok" } }
+      }
+    },
+    "/api/cart/items/{productId}": {
+      "patch": {
+        "tags": ["Cart"],
+        "summary": "Изменить количество",
+        "security": [{ "guestHeader": [] }],
+        "parameters": [{ "name": "productId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "type": "object", "properties": { "quantity": { "type": "integer" } } } } }
+        },
+        "responses": { "200": { "description": "ok" } }
+      },
+      "delete": {
+        "tags": ["Cart"],
+        "summary": "Удалить позицию",
+        "security": [{ "guestHeader": [] }],
+        "parameters": [{ "name": "productId", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "ok" } }
+      }
+    },
+    "/api/orders": {
+      "post": {
+        "tags": ["Orders"],
+        "summary": "Создать заказ из корзины",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["guestToken", "customerName", "phone", "address", "deliveryAt"],
+                "properties": {
+                  "guestToken": { "type": "string" },
+                  "customerName": { "type": "string" },
+                  "phone": { "type": "string" },
+                  "address": { "type": "string" },
+                  "comment": { "type": "string" },
+                  "deliveryAt": { "type": "string", "format": "date-time" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Создан" } }
+      }
+    },
+    "/api/admin/auth/login": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Вход",
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "type": "object", "properties": { "email": { "type": "string" }, "password": { "type": "string" } } } }
+          }
+        },
+        "responses": { "200": { "description": "ok" } }
+      }
+    },
+    "/api/admin/auth/logout": {
+      "post": { "tags": ["Admin"], "summary": "Выход", "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } }
+    },
+    "/api/admin/auth/me": {
+      "get": { "tags": ["Admin"], "summary": "Текущий админ", "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } }
+    },
+    "/api/admin/categories": {
+      "get": { "tags": ["Admin"], "summary": "Список (админ)", "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } },
+      "post": { "tags": ["Admin"], "summary": "Создать", "security": [{ "adminCookie": [] }], "responses": { "201": { "description": "ok" } } }
+    },
+    "/api/admin/categories/{id}": {
+      "get": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } },
+      "patch": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } },
+      "delete": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } }
+    },
+    "/api/admin/products": {
+      "get": { "tags": ["Admin"], "summary": "Все товары", "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } },
+      "post": { "tags": ["Admin"], "summary": "Создать", "security": [{ "adminCookie": [] }], "responses": { "201": { "description": "ok" } } }
+    },
+    "/api/admin/products/{id}": {
+      "get": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } },
+      "patch": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } },
+      "delete": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } }
+    },
+    "/api/admin/orders": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Список заказов",
+        "security": [{ "adminCookie": [] }],
+        "parameters": [
+          { "name": "status", "in": "query", "schema": { "type": "string" } },
+          { "name": "from", "in": "query", "schema": { "type": "string", "format": "date-time" } },
+          { "name": "to", "in": "query", "schema": { "type": "string", "format": "date-time" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": { "200": { "description": "ok" } }
+      }
+    },
+    "/api/admin/orders/{id}": {
+      "get": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } },
+      "patch": { "tags": ["Admin"], "parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }], "security": [{ "adminCookie": [] }], "responses": { "200": { "description": "ok" } } }
+    },
+    "/api/uploadthing": {
+      "get": { "tags": ["Upload"], "summary": "UploadThing (GET/POST — см. пакет uploadthing)", "responses": { "200": { "description": "ok" } } },
+      "post": { "tags": ["Upload"], "summary": "UploadThing", "responses": { "200": { "description": "ok" } } }
+    },
+    "/api/webhooks/yookassa": {
+      "post": { "tags": ["Webhooks"], "summary": "Вебхук ЮKassa (заглушка)", "responses": { "200": { "description": "ok" } } }
+    },
+    "/api/openapi.json": {
+      "get": { "summary": "Сырой OpenAPI (JSON)" }
+    }
+  }
+}
