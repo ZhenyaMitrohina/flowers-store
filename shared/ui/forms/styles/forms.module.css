@@ -1,0 +1,72 @@
+
+@reference "../../../../app/globals.css";
+
+.formField {
+	@apply flex flex-col gap-[5px] w-full relative;
+}
+
+.formField__input {
+	@apply border text-base overflow-hidden;
+}
+
+.formField__input__btnTrigger {
+	@apply w-full px-2 font-normal border border-border justify-between text-base;
+}
+
+.formField__input__error {
+	@apply outline outline-destructive;
+}
+
+/* .formField__input:-webkit-autofill,
+.formField__input:-webkit-autofill:hover,
+.formField__input:-webkit-autofill:focus {
+	@apply autofill-reset;
+} */
+
+.formField__buttons {
+	@apply flex items-center gap-1 absolute inset-y-0 right-3 bg-inherit my-1;
+}
+
+.formField__buttons svg {
+	@apply size-5 opacity-50 hover:opacity-100 transition-opacity duration-100;
+}
+
+.formField__clearButton {
+	@apply opacity-0 transition-opacity duration-100;
+}
+
+.formField__inputWrapper {
+	@apply relative;
+}
+
+.formField__inputWrapper:hover .formField__clearButton {
+	@apply opacity-50;
+}
+
+.formField__inputWrapper:hover .formField__clearButton:hover {
+	@apply opacity-100;
+}
+
+.formCheckbox {
+	@apply flex items-center;
+}
+
+.formCheckbox__label {
+	@apply ml-2 text-sm border-none;
+}
+
+.formCheckbox__label__error {
+	@apply text-red-300;
+}
+
+.formCheckbox__error {
+	@apply border-destructive bg-destructive/10;
+}
+
+.formField__description {
+	@apply text-xs text-muted-foreground;
+}
+
+.formField__error {
+	@apply text-destructive text-xs;
+}

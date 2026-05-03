@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type DiscountType } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { categories, products } from "./constants";
 
 const prisma = new PrismaClient();
 
@@ -14,35 +15,46 @@ async function main() {
     update: { passwordHash: hash },
   });
 
-  const seeds = [
-    { name: "Цветы", slug: "flowers", sortOrder: 0 },
-    { name: "Шары", slug: "balloons", sortOrder: 1 },
-    { name: "Игрушки", slug: "toys", sortOrder: 2 },
-  ] as const;
-
-  for (const c of seeds) {
+  for (const c of categories) {
     await prisma.category.upsert({
       where: { slug: c.slug },
-      create: c,
+      create: { name: c.name, slug: c.slug, sortOrder: c.sortOrder },
       update: { name: c.name, sortOrder: c.sortOrder },
     });
   }
 
-  const flowers = await prisma.category.findUniqueOrThrow({ where: { slug: "flowers" } });
-  const demo = await prisma.product.findFirst({ where: { name: "Роза красная (демо)" } });
-  if (!demo) {
-    await prisma.product.create({
-      data: {
-        name: "Роза красная (демо)",
-        description: "Стартовая позиция из seed.",
-        price: "199.00",
-        discountType: "NONE",
-        discountValue: "0",
-        imageUrls: [],
-        isActive: true,
-        categoryId: flowers.id,
-      },
-    });
+  const categoryRows = await prisma.category.findMany({
+    where: { slug: { in: categories.map((c) => c.slug) } },
+    select: { id: true, slug: true },
+  });
+  const categoryIdBySlug = new Map(categoryRows.map((row) => [row.slug, row.id]));
+
+  for (const catSlug of Object.keys(products) as (keyof typeof products)[]) {
+    const categoryId = categoryIdBySlug.get(catSlug);
+    if (!categoryId) continue;
+
+    for (const p of products[catSlug]) {
+      const existing = await prisma.product.findFirst({
+        where: { categoryId, name: p.name },
+      });
+
+      const data = {
+        name: p.name,
+        description: p.description,
+        price: p.price,
+        discountType: p.discountType as DiscountType,
+        discountValue: p.discountValue,
+        imageUrls: [...p.imageUrls],
+        isActive: p.isActive,
+        categoryId,
+      };
+
+      if (existing) {
+        await prisma.product.update({ where: { id: existing.id }, data });
+      } else {
+        await prisma.product.create({ data });
+      }
+    }
   }
 }
 

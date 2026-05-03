@@ -1,0 +1,7 @@
+export type { Product } from './model/types'
+export { ProductPrice } from './ui/product-price'
+export { ProductImageSlider } from './ui/product-image-slider'
+export { ProductGallery } from './ui/product-gallery'
+export { ProductCard } from './ui/product-card'
+export { AddToCartButton } from './ui/add-to-cart-button'
+export { searchProducts, fetchProduct, fetchProductsByCategory } from './api/products'

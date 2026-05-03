@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
 		remotePatterns: [
 			{ protocol: 'https', hostname: 'utfs.io', pathname: '/**' },
 			{ protocol: 'https', hostname: 'uploadthing.com', pathname: '/**' },
+			{ protocol: 'https', hostname: 'static.vecteezy.com', pathname: '/**' },
+			{ protocol: 'https', hostname: 'цветут.рф', pathname: '/**' },
+			{ protocol: 'https', hostname: 'xn--b1ag3baeo.xn--p1ai', pathname: '/**' },
+			{ protocol: 'https', hostname: 'mwpcsnmjp3.ufs.sh', pathname: '/**' },
 		],
 	},
 	env: {
