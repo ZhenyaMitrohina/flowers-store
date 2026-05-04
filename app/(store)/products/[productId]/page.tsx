@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 	const product = await loadProductForPage(productId)
 	if (!product) return { title: 'Товар не найден' }
 	return {
-		title: `${product.name} · Магазин цветов`,
+		title: `${product.name} · Флория`,
 		description: product.description.slice(0, 160) || product.name,
 	}
 }

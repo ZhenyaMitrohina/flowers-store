@@ -14,5 +14,6 @@ export * from './table'
 export * from './tabs'
 export * from './container'
 export * from './calendar'
+export * from './logo'
 
 export * from './data-table'

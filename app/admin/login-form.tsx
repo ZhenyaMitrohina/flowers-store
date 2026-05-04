@@ -34,7 +34,7 @@ export const LoginForm: React.FC = () => {
 			className='w-full max-w-sm bg-card rounded-3xl ring-1 ring-border p-6 flex flex-col gap-4'
 		>
 			<header className='flex flex-col gap-1'>
-				<h1 className='font-heading text-2xl font-semibold'>Админка</h1>
+				<h1 className='font-heading text-2xl font-semibold'>Панель администратора</h1>
 				<p className='text-sm text-muted-foreground'>Вход для управления магазином</p>
 			</header>
 

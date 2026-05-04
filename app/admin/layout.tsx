@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export const metadata = {
-	title: 'Админка · Магазин цветов',
+	title: 'Панель администратора · Флория',
 }
 
 export default function AdminLayout({ children }: { children: ReactNode }) {

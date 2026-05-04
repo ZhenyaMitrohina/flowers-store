@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-	title: 'Магазин цветов',
-	description: 'Дипломная работа',
+	title: 'Флория',
+	description: 'Флория - магазин цветов с доставкой по Нижнему Новгороду',
 }
 
 export default function RootLayout({

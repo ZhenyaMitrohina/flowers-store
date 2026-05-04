@@ -31,7 +31,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ email }) => {
 	return (
 		<aside className='shrink-0 w-60 bg-card border-r border-border/60 flex flex-col gap-4 p-4'>
 			<Link href='/admin/dashboard' className='font-heading text-xl font-semibold text-primary px-2'>
-				Цветы · админ
+				Флория
 			</Link>
 			<nav className='flex flex-col gap-1'>
 				{NAV.map((item) => {

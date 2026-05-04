@@ -130,7 +130,7 @@ export const CategoriesView: React.FC = () => {
 	const columns: ColumnDef<AdminCategory>[] = [
 		{ header: '#', accessorKey: 'sortOrder', cell: (info) => <span className='tabular-nums'>{info.getValue<number>()}</span> },
 		{ header: 'Название', accessorKey: 'name' },
-		{ header: 'Slug', accessorKey: 'slug', cell: (info) => <code className='text-xs'>{info.getValue<string>()}</code> },
+		{ header: 'Ссылка', accessorKey: 'slug', cell: (info) => <code className='text-xs'>{info.getValue<string>()}</code> },
 		{
 			header: 'Действия',
 			id: 'actions',
@@ -150,7 +150,7 @@ export const CategoriesView: React.FC = () => {
 	const open = creating || editing !== null
 
 	return (
-		<div className='flex flex-col gap-6 max-w-4xl'>
+		<div className='flex flex-col gap-6'>
 			<header className='flex items-center justify-between gap-4'>
 				<div>
 					<h1 className='font-heading text-3xl font-semibold'>Категории</h1>
@@ -171,7 +171,7 @@ export const CategoriesView: React.FC = () => {
 					<form onSubmit={submit} className='flex flex-col gap-4'>
 						<DialogHeader>
 							<DialogTitle>{editing ? 'Редактировать категорию' : 'Новая категория'}</DialogTitle>
-							<DialogDescription>Slug сгенерируется автоматически, если оставить пустым</DialogDescription>
+							<DialogDescription>Ссылка сгенерируется автоматически, если оставить пустым</DialogDescription>
 						</DialogHeader>
 
 						<label className='flex flex-col gap-1 text-sm'>
@@ -179,7 +179,7 @@ export const CategoriesView: React.FC = () => {
 							<Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
 						</label>
 						<label className='flex flex-col gap-1 text-sm'>
-							<span className='font-medium'>Slug (необязательно)</span>
+							<span className='font-medium'>Ссылка (необязательно)</span>
 							<Input
 								value={form.slug}
 								onChange={(e) => setForm({ ...form, slug: e.target.value })}

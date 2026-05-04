@@ -1,15 +1,7 @@
-import Link from 'next/link'
-import { Container } from '@/shared/ui'
+import { Container, Logo } from '@/shared/ui'
 import { ProductSearch } from '@/features/product-search'
 import { CartButton } from '@/entities/cart'
 
-const Logo = () => {
-	return (
-		<Link href='/' className='font-heading text-3xl md:text-4xl font-bold text-primary'>
-			Цветы
-		</Link>
-	)
-}
 
 export const Header: React.FC = () => {
 	return (
