@@ -1,6 +1,7 @@
 import { Container } from '@/shared/ui'
 import { CatalogSections } from '@/widgets/catalog-sections'
 import { SubHeader } from '@/widgets/sub-header'
+import { StoreHero } from '@/widgets/store-hero'
 import { loadCatalog } from '@/entities/product/api/catalog.server'
 import { loadCategories } from '@/entities/category/api/categories.server'
 
@@ -12,6 +13,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
 
 	return (
 		<div className='flex flex-col flex-1'>
+			<StoreHero />
 			<SubHeader categories={categories} />
 			<Container className='flex-1 py-10'>
 				<CatalogSections sections={sections} activeSlug={category} />
