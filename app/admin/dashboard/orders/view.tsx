@@ -98,12 +98,16 @@ export const OrdersView: React.FC = () => {
 		},
 		{
 			header: 'Создан',
+			accessorFn: (row) => dateFmt.format(new Date(row.createdAt)),
+			id: 'createdAt',
 			cell: ({ row }) => (
 				<span className='whitespace-nowrap'>{dateFmt.format(new Date(row.original.createdAt))}</span>
 			),
 		},
 		{
 			header: 'Доставка',
+			accessorFn: (row) => dateFmt.format(new Date(row.deliveryAt)),
+			id: 'deliveryAt',
 			cell: ({ row }) => (
 				<span className='whitespace-nowrap'>{dateFmt.format(new Date(row.original.deliveryAt))}</span>
 			),
@@ -112,12 +116,16 @@ export const OrdersView: React.FC = () => {
 		{ header: 'Телефон', accessorKey: 'phone' },
 		{
 			header: 'Сумма',
+			accessorFn: (row) => String(row.total),
+			id: 'total',
 			cell: ({ row }) => (
 				<span className='font-medium tabular-nums'>{fmt.format(Number(row.original.total))}</span>
 			),
 		},
 		{
 			header: 'Статус',
+			accessorFn: (row) => STATUS_LABEL[row.status],
+			id: 'orderStatus',
 			cell: ({ row }) => (
 				<Badge variant={STATUS_VARIANT[row.original.status]}>{STATUS_LABEL[row.original.status]}</Badge>
 			),
@@ -160,6 +168,7 @@ export const OrdersView: React.FC = () => {
 					loading={loading}
 					error={error}
 					emptyText='Заказов пока нет'
+					searchPlaceholder='Номер, имя, телефон, дата, сумма, статус…'
 					onRowClick={(o) => setOpen(o)}
 				/>
 			</div>

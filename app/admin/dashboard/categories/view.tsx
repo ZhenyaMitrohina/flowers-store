@@ -163,7 +163,14 @@ export const CategoriesView: React.FC = () => {
 			</header>
 
 			<div className='bg-card rounded-2xl ring-1 ring-border p-2'>
-				<DataTable columns={columns} data={rows} loading={loading} error={error} emptyText='Категорий пока нет' />
+				<DataTable
+					columns={columns}
+					data={rows}
+					loading={loading}
+					error={error}
+					emptyText='Категорий пока нет'
+					searchPlaceholder='Название, ссылка, позиция…'
+				/>
 			</div>
 
 			<Dialog open={open} onOpenChange={(v) => (v ? null : closeModal())}>

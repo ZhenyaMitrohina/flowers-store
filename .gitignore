@@ -42,3 +42,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+#docs
+docs/
+
+# scraper output (опционально коммитить при необходимости)
+data/cvetut/

@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { ListIcon, PackageIcon, ShoppingBagIcon } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
+import { CvetutImportPanel } from './cvetut-import-panel'
+import { isDev } from '@/shared/lib/is-dev'
 
 const CARDS = [
 	{
@@ -55,6 +57,7 @@ export default async function DashboardPage() {
 					)
 				})}
 			</div>
+			{isDev() && <CvetutImportPanel />}
 		</div>
 	)
 }
